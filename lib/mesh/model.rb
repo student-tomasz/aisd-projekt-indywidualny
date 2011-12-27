@@ -5,7 +5,8 @@ module Mesh
     attr_reader :faces, :vertices
 
     def initialize filepath
-      @faces, @vertices = [], []
+      @faces = FacesHash.new
+      @vertices = VerticesHash.new
 
       parse_file filepath
       generate_face_vertex_model
@@ -25,16 +26,17 @@ module Mesh
           if match = line.match(patterns[:vertex])
             id = match[:id].to_i
             coordinates = [match[:x], match[:y], match[:z]].map{ |v| v.to_f }
-            @vertices[id] = Vertex.new id, *coordinates
+            @vertices.add id, *coordinates
           elsif match = line.match(patterns[:face])
             id = match[:id].to_i
             vertices = [match[:v1], match[:v2], match[:v3]].map{ |v| @vertices[v.to_i] }
-            @faces[id] = Face.new id, *vertices
+            @faces.add id, *vertices
           else
             next
           end
         end
       end
+      puts @vertices.all
     end
 
     def generate_face_vertex_model
