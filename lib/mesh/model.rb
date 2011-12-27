@@ -2,14 +2,16 @@ require 'scanf'
 
 module Mesh
   class Model
-    attr_reader :faces, :vertices
+    attr_reader :faces, :vertices, :edges
 
     def initialize filepath
       @faces = FacesHash.new
       @vertices = VerticesHash.new
+      @edges = EdgesHash.new
 
       parse_file filepath
       generate_face_vertex_model
+      generate_half_edge_model
     end
 
   private
@@ -36,7 +38,6 @@ module Mesh
           end
         end
       end
-      puts @vertices.all
     end
 
     def generate_face_vertex_model
@@ -45,6 +46,13 @@ module Mesh
         face.vertices.each do |vertex|
           vertex.faces << face
         end
+      end
+    end
+
+    def generate_half_edge_model
+      @faces.each do |face|
+        next if face.nil?
+        @edges.generate_edges face
       end
     end
   end
