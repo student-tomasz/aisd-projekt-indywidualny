@@ -7,6 +7,12 @@ module Mesh
     def initialize filepath
       @faces, @vertices = [], []
 
+      parse_file filepath
+      generate_face_vertex_model
+    end
+
+  private
+    def parse_file filepath
       patterns = {
         :id     => /\d+/,
         :float  => /[\+\-]?\d+\.[\+\-e\d]+/
@@ -27,6 +33,15 @@ module Mesh
           else
             next
           end
+        end
+      end
+    end
+
+    def generate_face_vertex_model
+      @faces.each do |face|
+        next if face.nil?
+        face.vertices.each do |vertex|
+          vertex.faces << face
         end
       end
     end
