@@ -25,8 +25,8 @@ module Mesh
       ]
     end
 
-    def to_s
-      ("%8d " * 4 + "\n") % @vertices.map{|v| v.id}.unshift(id)
+    def vertices_ids
+      vertices.map { |vertex| vertex.id }
     end
   end
 end

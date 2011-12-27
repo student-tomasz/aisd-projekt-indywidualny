@@ -11,8 +11,19 @@ module Mesh
       @half_edge = half_edge
     end
 
-    def to_s
-      "%6d ( %16.12f, %16.12f, %16.12f)\n" % [@id, @x, @y, @z]
+    def adjacent_vertices_ids
+      ids = []
+      half_edge = @half_edge.next
+      until half_edge == @half_edge.pair
+        ids << half_edge.vertex.id
+        half_edge = half_edge.pair.next
+      end
+      ids << @half_edge.pair.vertex.id
+      ids
+    end
+
+    def faces_ids
+      @faces.map { |f| f.id }
     end
   end
 end
