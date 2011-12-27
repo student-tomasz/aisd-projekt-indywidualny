@@ -2,12 +2,13 @@ module Mesh
   class Vertex
     attr_reader   :id
     attr_reader   :x, :y, :z
-    attr_accessor :faces
+    attr_accessor :faces, :half_edge
 
-    def initialize id, x, y, z, faces = []
+    def initialize id, x, y, z, faces = [], half_edge = []
       @id = id
       @x, @y, @z = x, y, z
       @faces = faces
+      @half_edge = half_edge
     end
 
     def to_s

@@ -6,6 +6,9 @@ module Mesh
     def initialize edge, face, vertex
       @edge, @face, @vertex = edge, face, vertex
       @pair, @next = nil, nil
+
+      @vertex.half_edge = self
+      @face.half_edge = self if @face && !@face.half_edge
     end
   end
 end

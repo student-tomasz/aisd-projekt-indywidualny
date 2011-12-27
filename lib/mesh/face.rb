@@ -1,10 +1,12 @@
 module Mesh
   class Face
-    attr_reader :id, :vertices
+    attr_reader   :id, :vertices
+    attr_accessor :half_edge
 
-    def initialize id, v1, v2, v3
+    def initialize id, v1, v2, v3, half_edge = nil
       @id = id
       @vertices = [v1, v2, v3]
+      @half_edge = nil
     end
 
     def vertices_ordered seed_edge = nil
