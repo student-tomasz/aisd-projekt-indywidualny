@@ -1,5 +1,9 @@
+require 'timer'
+
 module UI
   class Menu
+    include Timer
+
     def initialize mesh
       @mesh = mesh
     end
@@ -63,7 +67,7 @@ module UI
     def face_action action_id, id
       face = @mesh.faces[id]
       if face
-        puts "Wezly elementu #{id} to #{face.vertices_ids}."
+        write_results "Wezly elementu", face, :vertices_ids
       else
         puts "Element o ID #{id} nie istnieje."
         nil
@@ -75,9 +79,9 @@ module UI
       if vertex
         case action_id
         when 2
-          puts "Wezly sasiadujace z wezlem #{id} to #{vertex.adjacent_vertices_ids}."
+          write_results "Wezly sasiadujace z wezlem", vertex, :adjacent_vertices_ids
         when 3
-          puts "Elementy sasiadujace z wezlem #{id} to #{vertex.faces_ids}."
+          write_results "Elementy sasiadujace z wezlem", vertex, :faces_ids
         end
       else
         puts "Wezel o ID #{id} nie istnieje."
@@ -90,15 +94,20 @@ module UI
       if edge
         case action_id
         when 4
-          puts "Wezly nalezace do krawedzi #{id} to #{edge.vertices_ids}."
+          # puts "Wezly nalezace do krawedzi #{id} to #{edge.vertices_ids}."
+          write_results "Wezly nalezace do krawedzi", edge, :vertices_ids
         when 5
-          puts "Elementy przylegle do krawedzi #{id} to #{edge.faces_ids}."
+          # puts "Elementy przylegle do krawedzi #{id} to #{edge.faces_ids}."
+          write_results "Elementy przylegle do krawedzi", edge, :faces_ids
         when 6
-          puts "Wezly sasiadujace z krawedzia #{id} to #{edge.adjacent_vertices_ids}."
+          # puts "Wezly sasiadujace z krawedzia #{id} to #{edge.adjacent_vertices_ids}."
+          write_results "Wezly sasiadujace z krawedzia", edge, :adjacent_vertices_ids
         when 7
-          puts "Elementy sasiadujace z krawedzia #{id} to #{edge.adjacent_faces_ids}."
+          # puts "Elementy sasiadujace z krawedzia #{id} to #{edge.adjacent_faces_ids}."
+          write_results "Elementy sasiadujace z krawedzia", edge, :adjacent_faces_ids
         when 8
-          puts "Krawedzie sasiadujace z krawedzia #{id} to #{edge.adjacent_edges_ids}."
+          # puts "Krawedzie sasiadujace z krawedzia #{id} to #{edge.adjacent_edges_ids}."
+          write_results "Krawedzie sasiadujace z krawedzia", edge, :adjacent_edges_ids
         end
       else
         puts "Krawedz o ID #{id} nie istnieje."
@@ -133,6 +142,10 @@ module UI
         puts 'Koniec programu. Problem z parsowaniem STDIN.'
         abort
       end
+    end
+
+    def write_results beginning, object, method
+      puts beginning + (" %i to %s. Wykonano w %.2f ms." % [object.id, *realtime { object.send(method) }])
     end
   end
 end
