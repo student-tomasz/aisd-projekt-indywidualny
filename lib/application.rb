@@ -1,10 +1,10 @@
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
-require 'perftools'
 require 'array'
 require 'mesh'
+require 'ui/menu'
 
-mesh = nil
-PerfTools::CpuProfiler.start("profiles/parsing.pprof") do
-  mesh = Mesh::Model.new ARGV[0]
-end
+mesh = Mesh::Model.new ARGV[0]
+menu = UI::Menu.new mesh
+
+menu.run
