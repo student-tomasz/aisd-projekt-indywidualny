@@ -9,6 +9,7 @@ module UI
     end
 
     def run
+      write_rule
       show_help
       write_rule
       while true
