@@ -1,23 +1,28 @@
 module Mesh
   class EdgesJournal
     def initialize
-      @journal = {}
+      @journal = []
     end
 
     def [] pair
-      @journal[key(pair)]
+      i, j = hash pair
+      @journal[i][j] if @journal[i]
     end
 
     def []= pair, edge
-      @journal[key(pair)] = edge
+      i, j = hash pair
+      @journal[i] = {} if @journal[i].nil?
+      @journal[i][j] = edge
     end
 
   private
-    # Uses Cantor pairing: http://en.wikipedia.org/wiki/Cantor_pairing_function#Cantor_pairing_function
-    def key pair
-      ids = [pair.first.id, pair.second.id]
-      ids.reverse! if ids.first > ids.second
-      (ids[0] + ids[1]) * (ids[0] + ids[1] + 1) / 2 + ids[1]
+    def hash pair
+      id0, id1 = pair[0].id, pair[1].id
+      if id0 < id1
+        return id0, id1
+      else
+        return id1, id0
+      end
     end
   end
 end

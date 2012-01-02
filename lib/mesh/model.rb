@@ -11,7 +11,7 @@ module Mesh
 
       parse_file filepath
       generate_face_vertex_model
-      generate_half_edge_model
+      generate_full_edge_model
     end
 
   private
@@ -27,12 +27,12 @@ module Mesh
         file.each do |line|
           if match = line.match(patterns[:vertex])
             id = match[:id].to_i
-            coordinates = [match[:x], match[:y], match[:z]].map{ |v| v.to_f }
-            @vertices.add id, *coordinates
+            coordinates = [match[:x], match[:y], match[:z]].map { |v| v.to_f }
+            @vertices.add id, coordinates
           elsif match = line.match(patterns[:face])
             id = match[:id].to_i
-            vertices = [match[:v1], match[:v2], match[:v3]].map{ |v| @vertices[v.to_i] }
-            @faces.add id, *vertices
+            vertices = [match[:v1], match[:v2], match[:v3]].map { |v| @vertices[v.to_i] }
+            @faces.add id, vertices
           else
             next
           end
@@ -49,11 +49,14 @@ module Mesh
       end
     end
 
-    def generate_half_edge_model
+    def generate_full_edge_model
       @faces.each do |face|
         next if face.nil?
-        @edges.generate_edges face
+        face.vertices_ordered.each do |pair|
+          @edges.add pair
+        end
       end
+      @edges.freeze
     end
   end
 end
