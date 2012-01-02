@@ -14,8 +14,8 @@ module Mesh
       ]
     end
 
-    def vertices_ids
-      [@vertices[0].id, @vertices[1].id, @vertices[2].id]
+    def to_s
+      @id.to_s
     end
   end
 end

@@ -67,7 +67,7 @@ module UI
     def face_action action_id, id
       face = @mesh.faces[id]
       if face
-        write_results "Wezly elementu", face, :vertices_ids
+        write_results "Wezly elementu", face, :vertices
       else
         puts "Element o ID #{id} nie istnieje."
         nil
@@ -79,9 +79,9 @@ module UI
       if vertex
         case action_id
         when 2
-          write_results "Wezly sasiadujace z wezlem", vertex, :adjacent_vertices_ids
+          write_results "Wezly sasiadujace z wezlem", vertex, :adjacent_vertices
         when 3
-          write_results "Elementy sasiadujace z wezlem", vertex, :faces_ids
+          write_results "Elementy sasiadujace z wezlem", vertex, :faces
         end
       else
         puts "Wezel o ID #{id} nie istnieje."
@@ -94,20 +94,20 @@ module UI
       if edge
         case action_id
         when 4
-          # puts "Wezly nalezace do krawedzi #{id} to #{edge.vertices_ids}."
-          write_results "Wezly nalezace do krawedzi", edge, :vertices_ids
+          # puts "Wezly nalezace do krawedzi #{id} to #{edge.vertices}."
+          write_results "Wezly nalezace do krawedzi", edge, :vertices
         when 5
-          # puts "Elementy przylegle do krawedzi #{id} to #{edge.faces_ids}."
-          write_results "Elementy przylegle do krawedzi", edge, :faces_ids
+          # puts "Elementy przylegle do krawedzi #{id} to #{edge.faces}."
+          write_results "Elementy przylegle do krawedzi", edge, :faces
         when 6
-          # puts "Wezly sasiadujace z krawedzia #{id} to #{edge.adjacent_vertices_ids}."
-          write_results "Wezly sasiadujace z krawedzia", edge, :adjacent_vertices_ids
+          # puts "Wezly sasiadujace z krawedzia #{id} to #{edge.adjacent_vertices}."
+          write_results "Wezly sasiadujace z krawedzia", edge, :adjacent_vertices
         when 7
-          # puts "Elementy sasiadujace z krawedzia #{id} to #{edge.adjacent_faces_ids}."
-          write_results "Elementy sasiadujace z krawedzia", edge, :adjacent_faces_ids
+          # puts "Elementy sasiadujace z krawedzia #{id} to #{edge.adjacent_faces}."
+          write_results "Elementy sasiadujace z krawedzia", edge, :adjacent_faces
         when 8
-          # puts "Krawedzie sasiadujace z krawedzia #{id} to #{edge.adjacent_edges_ids}."
-          write_results "Krawedzie sasiadujace z krawedzia", edge, :adjacent_edges_ids
+          # puts "Krawedzie sasiadujace z krawedzia #{id} to #{edge.adjacent_edges}."
+          write_results "Krawedzie sasiadujace z krawedzia", edge, :adjacent_edges
         end
       else
         puts "Krawedz o ID #{id} nie istnieje."

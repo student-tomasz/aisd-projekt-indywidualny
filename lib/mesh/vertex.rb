@@ -10,12 +10,12 @@ module Mesh
       @faces, @edges = faces, edges
     end
 
-    def adjacent_vertices_ids
-      @edges.map { |e| e.vertices[0] == self ? e.vertices[1].id : e.vertices[0].id }
+    def adjacent_vertices
+      @edges.map { |e| e.vertices[0] == self ? e.vertices[1] : e.vertices[0] }
     end
 
-    def faces_ids
-      @faces.map { |f| f.id }
+    def to_s
+      @id.to_s
     end
   end
 end

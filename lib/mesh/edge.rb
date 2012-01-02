@@ -8,24 +8,24 @@ module Mesh
       v2.edges << self
     end
 
-    def vertices_ids
-      [@vertices[0].id, @vertices[1].id]
+    def faces
+      @vertices[0].faces & @vertices[1].faces
     end
 
-    def faces_ids
-      @vertices[0].faces_ids & @vertices[1].faces_ids
+    def adjacent_vertices
+     [@vertices[0].adjacent_vertices, @vertices[1].adjacent_vertices].flatten.uniq
     end
 
-    def adjacent_vertices_ids
-     [@vertices[0].adjacent_vertices_ids, @vertices[1].adjacent_vertices_ids].flatten.uniq
+    def adjacent_faces
+     [@vertices[0].faces, @vertices[1].faces].flatten.uniq
     end
 
-    def adjacent_faces_ids
-     [@vertices[0].faces_ids, @vertices[1].faces_ids].flatten.uniq
+    def adjacent_edges
+     [@vertices[0].edges, @vertices[1].edges].flatten.reject { |e| e == self }
     end
 
-    def adjacent_edges_ids
-     [@vertices[0].edges.map{|e| e.id}, @vertices[1].edges.map{|e| e.id}].flatten.reject{|e| e == @id}
+    def to_s
+      @id.to_s
     end
   end
 end
