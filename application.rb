@@ -1,11 +1,11 @@
-$LOAD_PATH.unshift File.dirname(__FILE__)
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 
-require 'timer'
+require 'ui/timer'
 require 'ui/menu'
 require 'mesh'
 
 class Application
-  include Timer
+  include UI::Timer
 
   def initialize
     @mesh, @menu = nil, nil
@@ -20,7 +20,8 @@ class Application
     @menu.run
   end
 
-private
+  private
+  
   def parse_arguments
     filepath = ARGV[0]
     unless filepath && File.file?(filepath)

@@ -1,4 +1,4 @@
-require 'timer'
+require 'ui/timer'
 
 module UI
   class Menu
