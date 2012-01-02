@@ -8,48 +8,62 @@ module Mesh
       @edges = EdgesHash.new
 
       parse_file filepath
-      generate_face_vertex_model
-      generate_full_edge_model
+      generate_edges
     end
 
   private
     def parse_file filepath
-      patterns = {
-        :id     => /\d+/,
-        :float  => /[\+\-]?\d+\.[\+\-e\d]+/
-      }
-      patterns[:vertex] = /^\s*(?<id>#{patterns[:id]})\s*\(\s*(?<x>#{patterns[:float]}),\s*(?<y>#{patterns[:float]}),\s*(?<z>#{patterns[:float]})\s*\)/
-      patterns[:face]   = /^\s*(?<id>#{patterns[:id]})\s+(?<v1>#{patterns[:id]})\s+(?<v2>#{patterns[:id]})\s+(?<v3>#{patterns[:id]})/
-
+      faces_count, vertices_count = nil, nil
       File.open filepath do |file|
-        file.each do |line|
-          if match = line.match(patterns[:vertex])
-            id = match[:id].to_i
-            coordinates = [match[:x], match[:y], match[:z]].map { |v| v.to_f }
-            @vertices.add id, coordinates
-          elsif match = line.match(patterns[:face])
-            id = match[:id].to_i
-            vertices = [match[:v1], match[:v2], match[:v3]].map { |v| @vertices[v.to_i] }
-            @faces.add id, vertices
-          else
-            next
-          end
-        end
+        faces_count, vertices_count = parse_counts file
+        parse_vertices file, vertices_count
+        parse_faces file, faces_count
       end
     end
 
-    def generate_face_vertex_model
-      @faces.each do |face|
-        next if face.nil?
-        face.vertices.each do |vertex|
-          vertex.faces << face
+    def parse_counts file
+      patterns = {
+        :faces_count    => /^\s*Number of elements\s*=\s*(?<count>\d+)/,
+        :vertices_count => /^\s*Number of nodes\s*=\s*(?<count>\d+)/
+      }
+      faces_count, vertices_count = nil, nil
+
+      file.each do |line|
+        if match = line.match(patterns[:faces_count])
+          faces_count = match[:count].to_i
+        elsif match = line.match(patterns[:vertices_count])
+          vertices_count = match[:count].to_i
         end
+        break if faces_count && vertices_count
+      end
+
+      return faces_count, vertices_count
+    end
+
+    def parse_vertices file, vertices_count
+      file.each do |line|
+        next if line.strip.empty? || line.lstrip.start_with?('#')
+        line = line.split(/\(,/)
+        id = line[0].to_i
+        coordinates = [line[1].to_f, line[2].to_f, line[3].to_f]
+        @vertices.add id, coordinates
+        break if @vertices.length == vertices_count
       end
     end
 
-    def generate_full_edge_model
+    def parse_faces file, faces_count
+      file.each do |line|
+        next if line.strip.empty? || line.lstrip.start_with?('#')
+        line = line.split.map { |s| s.to_i }
+        id = line[0]
+        vertices = [@vertices[line[1]], @vertices[line[2]], @vertices[line[3]]]
+        @faces.add id, vertices
+        break if @faces.length == faces_count
+      end
+    end
+
+    def generate_edges
       @faces.each do |face|
-        next if face.nil?
         face.vertices_ordered.each do |pair|
           @edges.add pair
         end
