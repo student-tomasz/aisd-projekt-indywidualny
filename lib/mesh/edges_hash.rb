@@ -21,6 +21,7 @@ module Mesh
     end
 
     def freeze
+      @journal.freeze
       @journal = nil
     end
   end

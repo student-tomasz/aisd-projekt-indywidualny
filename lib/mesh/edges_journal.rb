@@ -1,18 +1,21 @@
+require 'matrix/lil'
+
 module Mesh
   class EdgesJournal
     def initialize
-      @journal = []
+      @journal = Matrix::LIL.new
     end
 
     def [] pair
-      i, j = hash pair
-      @journal[i][j] if @journal[i]
+      @journal[*hash(pair)]
     end
 
     def []= pair, edge
-      i, j = hash pair
-      @journal[i] = {} if @journal[i].nil?
-      @journal[i][j] = edge
+      @journal[*hash(pair)] = edge
+    end
+
+    def freeze
+      @journal = nil
     end
 
   private
