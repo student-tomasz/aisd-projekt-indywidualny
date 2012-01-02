@@ -1,6 +1,5 @@
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
-require 'array'
 require 'mesh'
 require 'ui/menu'
 

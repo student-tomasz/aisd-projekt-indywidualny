@@ -4,7 +4,6 @@ require 'rubygems'
 require 'bundler/setup'
 require 'pry'
 
-require 'array'
 require 'mesh'
 
 mesh = Mesh::Model.new ARGV[0]

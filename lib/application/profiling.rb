@@ -4,7 +4,6 @@ require 'rubygems'
 require 'bundler/setup'
 require 'perftools'
 
-require 'array'
 require 'mesh'
 
 mesh = nil
