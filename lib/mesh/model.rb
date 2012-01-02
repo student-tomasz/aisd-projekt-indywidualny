@@ -1,5 +1,3 @@
-require 'scanf'
-
 module Mesh
   class Model
     attr_reader :faces, :vertices, :edges
