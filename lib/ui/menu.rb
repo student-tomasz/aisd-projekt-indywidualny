@@ -9,10 +9,11 @@ module UI
     end
 
     def run
+      show_help
+      write_rule
       while true
-        show_help
         run_action
-        wait
+        write_rule
       end
     end
 
@@ -23,12 +24,15 @@ module UI
       puts '  1. indeksy wezlow podanego elementu,'
       puts '  2. indeksy wezlow bezposrednio sasiadujacych z podanym wezlem,'
       puts '  3. indeksy elementow bezposrednio sasiadujacych z podanym wezlem,'
-      puts '  4. indeksy wezlow podanej krawedzi,'
-      puts '  5. indeksy elementow przyleglych do podanej krawedzi,'
-      puts '  6. indeksy wezlow bezposrednio sasiadujacych z podana krawedzia,'
-      puts '  7. indeksy elementow bezposrednio sasiadujacych z podana krawedzia,'
-      puts '  8. indeksy krawedzi bezposrednio sasiadujacych z podana krawedzia,'
-      puts '  9. koniec.'
+      puts '  4. indeksy krawedzi podanego wezla,'
+      puts '  5. indeksy wezlow podanej krawedzi,'
+      puts '  6. indeksy elementow przyleglych do podanej krawedzi,'
+      puts '  7. indeksy wezlow bezposrednio sasiadujacych z podana krawedzia,'
+      puts '  8. indeksy elementow bezposrednio sasiadujacych z podana krawedzia,'
+      puts '  9. indeksy krawedzi bezposrednio sasiadujacych z podana krawedzia,'
+      puts '  -'
+      puts '  h. pomoc,'
+      puts '  q. koniec.'
     end
 
     def run_action
@@ -38,16 +42,19 @@ module UI
       case action_id
       when 1
         print 'Podaj ID elementu: '
-      when 2, 3
+      when 2..4
         print 'Podaj ID wezla: '
-      when 4..8
+      when 5..9
         print 'Podaj ID krawedzi: '
-      when 9
+      when 'h'
+        show_help
+        return
+      when 'q'
         puts 'Koniec programu.'
         exit
       else
-        puts "Akcja o ID #{action_id} jest nieznana."
-        puts "Znamy tylko akcje z zakresu (1..9)."
+        puts 'Akcja o podanym ID jest nieznana.'
+        puts 'Znamy tylko akcje z zakresu (1..9).'
         return
       end
       id = read_input
@@ -56,9 +63,9 @@ module UI
         case action_id
         when 1
           face_action action_id, id
-        when 2, 3
+        when 2..4
           vertex_action action_id, id
-        when 4..8
+        when 5..9
           edge_action action_id, id
         end
       end
@@ -82,6 +89,8 @@ module UI
           write_results "Wezly sasiadujace z wezlem", vertex, :adjacent_vertices
         when 3
           write_results "Elementy sasiadujace z wezlem", vertex, :faces
+        when 4
+          write_results "Krawedzie wezla", vertex, :edges
         end
       else
         puts "Wezel o ID #{id} nie istnieje."
@@ -93,19 +102,19 @@ module UI
       edge = @mesh.edges[id]
       if edge
         case action_id
-        when 4
+        when 5
           # puts "Wezly nalezace do krawedzi #{id} to #{edge.vertices}."
           write_results "Wezly nalezace do krawedzi", edge, :vertices
-        when 5
+        when 6
           # puts "Elementy przylegle do krawedzi #{id} to #{edge.faces}."
           write_results "Elementy przylegle do krawedzi", edge, :faces
-        when 6
+        when 7
           # puts "Wezly sasiadujace z krawedzia #{id} to #{edge.adjacent_vertices}."
           write_results "Wezly sasiadujace z krawedzia", edge, :adjacent_vertices
-        when 7
+        when 8
           # puts "Elementy sasiadujace z krawedzia #{id} to #{edge.adjacent_faces}."
           write_results "Elementy sasiadujace z krawedzia", edge, :adjacent_faces
-        when 8
+        when 9
           # puts "Krawedzie sasiadujace z krawedzia #{id} to #{edge.adjacent_edges}."
           write_results "Krawedzie sasiadujace z krawedzia", edge, :adjacent_edges
         end
@@ -115,37 +124,30 @@ module UI
       end
     end
 
-    def wait
-      STDIN.gets
-      puts
-    end
-
     def read_input
-      number = nil
+      input = nil
       begin 
-        number = STDIN.gets
+        input = STDIN.gets
       rescue
         puts 'Koniec programu. Problem z czytaniem STDIN.'
         abort
       end
-
-      if number
-        number = number.chomp.to_i
-        if number == 0
-          puts 'Argument nie rozpoznany.'
-          puts "Przyjmowane sa tylko ID w postaci liczb naturalnych bez '0'."
-          nil
-        else
-          return number
-        end
-      else
-        puts 'Koniec programu. Problem z parsowaniem STDIN.'
-        abort
+      if input
+        input.strip!
+        input.chomp!
+        parsed = input.to_i
+        return parsed if parsed != 0
       end
+      return input
     end
 
     def write_results beginning, object, method
       puts beginning + (" %i to %s. Wykonano w %.2f ms." % [object.id, *realtime { object.send(method) }])
+    end
+
+    def write_rule
+      puts "---"
+      puts
     end
   end
 end

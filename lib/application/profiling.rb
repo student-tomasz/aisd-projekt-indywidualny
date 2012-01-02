@@ -21,7 +21,7 @@ PerfTools::CpuProfiler.start("profiles/1-vertices_of_a_face.pprof") do
   end
 end
 
-[:adjacent_vertices, :faces].each_with_index do |method, index|
+[:adjacent_vertices, :faces, :edges].each_with_index do |method, index|
   PerfTools::CpuProfiler.start("profiles/#{index+2}-#{method}_of_a_vertex.pprof") do
     mesh.vertices.each do |vertex|
       next unless vertex
@@ -31,7 +31,7 @@ end
 end
 
 [:vertices, :faces, :adjacent_vertices, :adjacent_faces, :adjacent_edges].each_with_index do |method, index|
-  PerfTools::CpuProfiler.start("profiles/#{index+4}-#{method}_of_an_edge.pprof") do
+  PerfTools::CpuProfiler.start("profiles/#{index+5}-#{method}_of_an_edge.pprof") do
     mesh.edges.each do |edge|
       next unless edge
       edge.send method
