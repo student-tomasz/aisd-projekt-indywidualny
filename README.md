@@ -9,7 +9,7 @@ Program uruchamiany jest poleceniem:
 ## Profilowanie
 
 Wydajność badana jest wykorzystując bibliotekę `perftools`. Przeprowadzenie
-profilowanie i generacja graficznej reprezentacji wyników:
+profilowania i generacja graficznej reprezentacji wyników:
 
     rake profile
 
